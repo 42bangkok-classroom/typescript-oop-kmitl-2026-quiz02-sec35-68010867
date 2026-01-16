@@ -10,7 +10,7 @@ interface EdgePost {
   title: string;
 }
 
-async function getEdgePosts(): Promise<EdgePost[]> {
+export async function getEdgePosts(): Promise<EdgePost[]> {
   const url = 'https://jsonplaceholder.typicode.com/posts';
 
   try {
