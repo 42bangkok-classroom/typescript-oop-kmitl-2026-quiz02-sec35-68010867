@@ -1,41 +1,30 @@
+import axios from 'axios';
+
 interface Post {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
-}
-
-interface EdgePost {
   id: number;
   title: string;
 }
 
-export async function getEdgePosts(): Promise<EdgePost[]> {
+
+export async function getEdgePosts(): Promise<Post[]> {
   const url = 'https://jsonplaceholder.typicode.com/posts';
 
   try {
-    const response = await fetch(url);
-    
-   
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    const { data } = await axios.get<Post[]>(url);
+
+    if (data.length === 0) {
+      return [];
     }
 
-    const data: Post[] = await response.json();
+    const firstPost = data[0];
+    const lastPost = data[data.length - 1];
 
-    
-    if (data.length === 0) return [];
-
-    
-    const selection = [data[0], data[data.length - 1]];
-
-    
-    return selection.map((item: Post) => ({
-      id: item.id,
-      title: item.title,
+   return [firstPost, lastPost].map(({ id, title }) => ({
+      id,
+      title,
     }));
-  } catch (error) {
     
-    throw error;
+  } catch (error) {
+    throw new Error('Failed to fetch posts');
   }
 }
