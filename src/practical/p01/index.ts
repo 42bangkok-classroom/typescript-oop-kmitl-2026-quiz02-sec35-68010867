@@ -10,34 +10,24 @@ interface EdgePost {
   title: string;
 }
 
-export async function getEdgePosts(): Promise<EdgePost[]> {
+async function getEdgePosts(): Promise<EdgePost[]> {
   const url = 'https://jsonplaceholder.typicode.com/posts';
 
   try {
     const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
     const data: Post[] = await response.json();
 
-    if (data.length === 0) {
-      return [];
-    }
+    if (!data || data.length === 0) return [];
 
-    
-    const first = data[0];
-    const last = data[data.length - 1];
+   const selection = [data[0], data[data.length - 1]];
 
-    
-    return [first, last].map(({ id, title }) => ({
-      id,
-      title,
+    return selection.map((post: Post) => ({
+      id: post.id,
+      title: post.title
     }));
+
   } catch (error) {
     
-
     throw error;
   }
 }
