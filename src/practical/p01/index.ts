@@ -15,17 +15,25 @@ export async function getEdgePosts(): Promise<EdgePost[]> {
 
   try {
     const response = await fetch(url);
+    
+   
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
     const data: Post[] = await response.json();
 
-    if (!data || data.length === 0) return [];
+    
+    if (data.length === 0) return [];
 
-   const selection = [data[0], data[data.length - 1]];
+    
+    const selection = [data[0], data[data.length - 1]];
 
-    return selection.map((post: Post) => ({
-      id: post.id,
-      title: post.title
+    
+    return selection.map((item: Post) => ({
+      id: item.id,
+      title: item.title,
     }));
-
   } catch (error) {
     
     throw error;
